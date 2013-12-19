@@ -1,67 +1,70 @@
 ENV['RACK_ENV'] = 'test'
-require 'rack/test'
 gem "minitest"
+require 'rack/test'
 require 'minitest/autorun'
 require_relative '../app.rb'
-
+require_relative 'helpers.rb'
 include Rack::Test::Methods
 
 def app
   Sinatra::Application
 end
 
-describe "GET test job" do
-  it "should return the job with the example content" do
-    get 'api/jobs/1'
-    job = {id: 1, name: "Paladin"}
-    assert_equal job.to_json, last_response.body
-    last_response.status.must_equal 200
-  end
-end
-
-describe "GET jobs" do
-  it "responds with OK to heros index call" do
+describe "See all jobs" do
+  it "responds with OK to jobs index call" do
     get "/api/jobs"
     last_response.status.must_equal 200
   end
 end
 
-describe "GET job" do
+describe "See a job" do
+  before do
+    data = {name: "Rogue"}
+    post "/api/jobs", data
+  end
+
   it "responds with OK to job show call" do
     get "/api/jobs/1"
     last_response.status.must_equal 200
   end
 end
 
-describe "POST job" do
+describe "Create a job" do
   before do
-    data = {name: "Rogue"}
-    post "/api/jobs", data
+    @data = {name: "Rogue"}
   end
+
+  it "must increase the job count by one" do
+    lambda { post "/api/jobs", @data }.must_change Job.all, :count, +1
+  end
+
   it "check if the job has been created accordingly" do
-    resp = JSON.parse(last_response.body)
+    post_data = post "/api/jobs", @data
+    resp = JSON.parse(post_data.body)
     resp["name"].must_equal "Rogue"
   end
 end
 
-describe "UPDATE job" do
+describe "Edit a job" do
   before do
-    data = {name: "Rogue"}
-    put "/api/jobs/1", data
+    @data = {name: "Rogue"}
   end
+
   it "check if the job has been updated accordingly" do
-    resp = JSON.parse(last_response.body)
+    put_data = put "/api/jobs/2", @data
+    resp = JSON.parse(put_data.body)
     resp["name"].must_equal "Rogue"
   end
 end
 
-describe "Delete job" do
+describe "Destroy a job" do
   before do
-    data = {name: "Rogue"}
-    post "/api/jobs", data
+    @data = { name: "Rogue"}
+    post "/api/jobs", @data
   end
-  it "responds successfully with 200" do
-    delete "/api/jobs/2"
+
+  it "must decrease the job count by one" do
+    lambda { delete "/api/jobs/2" }.must_change Job.all, :count, -1
     last_response.status.must_equal 200
   end
 end

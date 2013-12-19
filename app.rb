@@ -54,6 +54,7 @@ end
 DataMapper.finalize
 DataMapper.auto_migrate!
 
+# Example data.
 Job.create(name: 'Paladin')
 Race.create(name: 'Human')
 Weapon.create(name: 'Mithril Hammer', desc: "The almighty Thor Hammer, gives +10 to all stats")

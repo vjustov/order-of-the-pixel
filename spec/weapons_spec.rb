@@ -1,68 +1,77 @@
 ENV['RACK_ENV'] = 'test'
-require 'rack/test'
 gem "minitest"
+require 'rack/test'
 require 'minitest/autorun'
 require_relative '../app.rb'
-
+require_relative 'helpers.rb'
 include Rack::Test::Methods
 
 def app
   Sinatra::Application
 end
 
-describe "GET test weapon" do
-  it "should return the weapon with the example content" do
-    get 'api/weapons/1'
-    weapon = {id: 1, name: "Mithril Hammer", desc: "The almighty Thor Hammer, gives +10 to all stats"}
-    assert_equal weapon.to_json, last_response.body
-    last_response.status.must_equal 200
-  end
-end
-
-describe "GET weapons" do
+describe "See all weapons" do
   it "responds with OK to wepaons index call" do
     get "/api/weapons"
     last_response.status.must_equal 200
   end
 end
 
-describe "GET weapon" do
+describe "See a weapon" do
+  before do
+    data = {name: "Bastard Sword",
+     desc: "Worn by the bravest, adds +1 agility"}
+    post "/api/weapons", data
+  end
+
   it "responds with OK to weapon show call" do
     get "/api/weapons/1"
     last_response.status.must_equal 200
   end
 end
 
-describe "POST weapon" do
+
+describe "Create a weapon" do
   before do
-    data = {name: "Bastard Sword", desc: "Worn by the bravest, adds +1 agility"}
-    post "/api/weapons", data
+    @data = {name: "Bastard Sword",
+     desc: "Worn by the bravest, adds +1 agility"}
   end
+
+  it "must increase the weapon count by one" do
+    lambda { post "/api/weapons", @data }.must_change Weapon.all, :count, +1
+  end
+
   it "check if the weapon has been created accordingly" do
-    resp = JSON.parse(last_response.body)
+    post_data = post "/api/weapons", @data
+    resp = JSON.parse(post_data.body)
     resp["name"].must_equal "Bastard Sword"
     resp["desc"].must_equal "Worn by the bravest, adds +1 agility"
   end
 end
 
-describe "UPDATE weapon" do
+describe "Edit a weapon" do
   before do
-    data = {name: "Deity Hammer"}
-    put "/api/weapons/1", data
+    @data = {name: "Bastard Sword",
+     desc: "Worn by the bravest, adds +1 agility"}
   end
+
   it "check if the weapon has been updated accordingly" do
-    resp = JSON.parse(last_response.body)
-    resp["name"].must_equal "Deity Hammer"
+    put_data = put "/api/weapons/2", @data
+    resp = JSON.parse(put_data.body)
+    resp["name"].must_equal "Bastard Sword"
+    resp["desc"].must_equal "Worn by the bravest, adds +1 agility"
   end
 end
 
-describe "Delete weapon" do
+describe "Destroy a weapon" do
   before do
-    data = {name: "Bastard Sword", desc: "Worn by the bravest, adds +1 agility"}
-    post "/api/weapons", data
+    @data = {name: "Bastard Sword",
+     desc: "Worn by the bravest, adds +1 agility"}
+    post "/api/weapons", @data
   end
-  it "responds successfully with 200" do
-    delete "/api/weapons/2"
+
+  it "must decrease the weapon count by one" do
+    lambda { delete "/api/weapons/2" }.must_change Weapon.all, :count, -1
     last_response.status.must_equal 200
   end
 end
