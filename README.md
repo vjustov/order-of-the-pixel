@@ -29,15 +29,15 @@ Here are the url's supported by the API:
 
   Supported Actions: GET, PUT, POST, DELETE
 
-- :weapons =>  http://order-of-the-pixel.herokuapp.com/api/weapons
+- :weapons =>  http://order-of-the-pixel.herokuapp.com/api/v1/weapons
 
   Supported Actions: GET, PUT, POST, DELETE
   
-- :races =>  http://order-of-the-pixel.herokuapp.com/api/races
+- :races =>  http://order-of-the-pixel.herokuapp.com/api/v1/races
 
   Supported Actions: GET, PUT, POST, DELETE
   
-- :jobs =>  http://order-of-the-pixel.herokuapp.com/api/jobs
+- :jobs =>  http://order-of-the-pixel.herokuapp.com/api/v1/jobs
 
   Supported Actions: GET, PUT, POST, DELETE
 
@@ -84,5 +84,5 @@ Here is an example request that will create a **Hero**.
 
 * To run the Sinatra app simply install the dependencias via bundler and run the server from the root using `ruby app.rb`. 
 
-Destroy, update and show actions are available by specifiying the entity's ID at the end (ie: http://order-of-the-pixel.herokuapp.com/api/weapons/1).
+Destroy, update and show actions are available by specifiying the entity's ID at the end (ie: http://order-of-the-pixel.herokuapp.com/api/v1/weapons/1).
 
