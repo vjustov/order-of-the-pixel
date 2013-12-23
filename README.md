@@ -11,31 +11,33 @@ play with it.
 We enjoy role playing games here at Pixel Perfect Tree so we’ve developed a small API to list the heroes from the Order of Pixel.
 A Hero is composed of 3 basic entities, a Weapon, A Race and a Job.
 
-* The **Weapon** is what the hero will wear on his quests (ie Bastard Sword or Mighty Bow).
+* The **Weapon** is what the hero will wear on his quests (ie: Bastard Sword or Mighty Bow).
 * The **Race** is a classification used to categorize heroes into distinct populations or groups by anatomical, 
-cultural and geographical (ie Elf, Dwarf or Orc).
+cultural and geographical (ie: Elf, Dwarf or Orc).
 * The **Job** aggregates several abilities and aptitudes depending what role the hero has chosen to follow 
-(ie Warrior, Warlock, Priest or Archer)
+(ie: Warrior, Warlock, Priest or Archer)
 
 
 ### API usage
 Here are the url's supported by the API:
 
-- :base =>  http://api.root (soon to be determined)
+- :base =>  http://order-of-the-pixel.herokuapp.com/api/
 
-- :heroes => http://api.root/api/heroes
+- :readme =>  http://order-of-the-pixel.herokuapp.com/readme  
 
-  Supported Actions: GET, PUT, POST, DELETE
-
-- :weapons =>  http://api.root/api/weapons
+- :heroes => http://order-of-the-pixel.herokuapp.com/api/heroes/
 
   Supported Actions: GET, PUT, POST, DELETE
-  
-- :races =>  http://api.root/api/races
+
+- :weapons =>  http://order-of-the-pixel.herokuapp.com/api/weapons/
 
   Supported Actions: GET, PUT, POST, DELETE
   
-- :jobs =>  http://api.root/api/jobs
+- :races =>  http://order-of-the-pixel.herokuapp.com/api/races/
+
+  Supported Actions: GET, PUT, POST, DELETE
+  
+- :jobs =>  http://order-of-the-pixel.herokuapp.com/api/jobs/
 
   Supported Actions: GET, PUT, POST, DELETE
 
@@ -81,3 +83,6 @@ Here is an example request that will create a **Hero**.
 * Tests can be run using the Rake task `rake test`.
 
 * To run the Sinatra app simply install the dependencias via bundler and run the server from the root using `ruby app.rb`. 
+
+Destroy, update and show actions are available by specifiying the entity's ID at the end (ie: http://order-of-the-pixel.herokuapp.com/api/weapons/1).
+
