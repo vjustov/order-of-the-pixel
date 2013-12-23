@@ -4,6 +4,7 @@ GEM
     addressable (2.3.5)
     backports (3.3.5)
     bcrypt-ruby (3.1.2)
+    columnize (0.3.6)
     data_mapper (1.2.0)
       dm-aggregates (~> 1.2.0)
       dm-constraints (~> 1.2.0)
@@ -16,6 +17,12 @@ GEM
       dm-validations (~> 1.2.0)
     data_objects (0.10.13)
       addressable (~> 2.1)
+    debugger (1.6.3)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.2.0)
+      debugger-ruby_core_source (~> 1.2.4)
+    debugger-linecache (1.2.0)
+    debugger-ruby_core_source (1.2.4)
     dm-aggregates (1.2.0)
       dm-core (~> 1.2.0)
     dm-constraints (1.2.0)
@@ -53,6 +60,8 @@ GEM
     do_sqlite3 (0.10.13)
       data_objects (= 0.10.13)
     fastercsv (1.5.5)
+    haml (4.0.4)
+      tilt
     json (1.8.1)
     json_pure (1.8.1)
     minitest (5.2.0)
@@ -86,7 +95,9 @@ PLATFORMS
 
 DEPENDENCIES
   data_mapper
+  debugger
   dm-sqlite-adapter
+  haml
   json
   minitest (~> 5.0)
   multi_json
