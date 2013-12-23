@@ -43,8 +43,7 @@ Note: This API only supports JSON.
 
 ## Example Requests ##
 Below is an example request that will create a **Weapon**.
-<pre><code>
-{
+<pre><code>{
     "name": "Mjolnir",
     "desc": "Thor's Hammer, he might smite as hard as he desires, whatsoever might be before him, and the hammer would not fail."
 }
@@ -52,24 +51,21 @@ Below is an example request that will create a **Weapon**.
 
 
 Here is an example request that will create a **Race**.
-<pre><code>
-{
+<pre><code>{
     "name": "God"
 }
 </pre></code>
 
 
 Here is an example request that will create a **Job**.
-<pre><code>
-{
+<pre><code>{
     "name": "Paladin"
 }
 </pre></code>
 
 
 Here is an example request that will create a **Hero**.
-<pre><code>
-{
+<pre><code>{
     "name": "Thor",
     "weapon_id": 1,
     "job_id": 1,
