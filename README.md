@@ -3,18 +3,18 @@ Order of the Pixel
 
 ### General
 
-Order of the Pixel is a small Sinatra API running on Puma using DataMapper &amp; Minitest open for people to
+Order of the Pixel is a small Sinatra API running on Puma using DataMapper &amp; Minitest and it's open for people to
 play with it.
 
 ### API Description
 
-We enjoy role playing games here at Pixel, we’ve developed a small API to list the heroes from the Order of Pixel.
+We enjoy role playing games here at Pixel Perfect Tree so we’ve developed a small API to list the heroes from the Order of Pixel.
 A Hero is composed of 3 basic entities, a Weapon, A Race and a Job.
 
-The **Weapon** is what the hero will wear to fight the evil (ie Bastard Sword or Mighty Bow).
-The **Race** is a classification used to categorize heroes into distinct populations or groups by anatomical, 
+* The **Weapon** is what the hero will wear on his quests (ie Bastard Sword or Mighty Bow).
+* The **Race** is a classification used to categorize heroes into distinct populations or groups by anatomical, 
 cultural and geographical (ie Elf, Dwarf or Orc).
-The **Job** aggregates several abilities and aptitudes depending what role the hero has chosen to follow 
+* The **Job** aggregates several abilities and aptitudes depending what role the hero has chosen to follow 
 (ie Warrior, Warlock, Priest or Archer)
 
 
@@ -80,7 +80,7 @@ Here is an example request that will create a **Hero**.
 #### Notes
 
 * At the moment, you can't delete a Weapon, Race or Job if it's currently assigned to a hero 
-(But you can delete a heroe without destroying it's attached entities).
+(But you can delete a hero without destroying it's attached entities).
 
 * Tests can be run using the Rake task `rake test`.
 
