@@ -25,7 +25,7 @@ Here are the url's supported by the API:
 
 - :readme =>  http://order-of-the-pixel.herokuapp.com/readme  
 
-- :heroes => http://order-of-the-pixel.herokuapp.com/api/heroes
+- :heroes => http://order-of-the-pixel.herokuapp.com/api/v1/heroes
 
   Supported Actions: GET, PUT, POST, DELETE
 
