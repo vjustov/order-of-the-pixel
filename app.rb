@@ -8,6 +8,7 @@ require 'sinatra'
 require "sinatra/namespace"
 require "sinatra/base"
 require 'debugger'
+require 'haml'
 
 configure :development, :test, :production do
   register ::Sinatra::Namespace
@@ -60,11 +61,11 @@ Race.create(name: 'Human')
 Weapon.create(name: 'Mithril Hammer', desc: "The almighty Thor Hammer, gives +10 to all stats")
 Hero.create(name: 'Thor', weapon_id: 1, job_id: 1, race_id: 1)
 
-namespace '/api' do
+get '/' do
+  haml :index
+end
 
-  get '/?' do
-    "Welcome to Order of the Pixel!"
-  end
+namespace '/api' do
 
   # index
   get '/heroes' do

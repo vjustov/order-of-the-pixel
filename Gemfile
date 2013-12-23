@@ -9,6 +9,7 @@ gem 'sinatra-contrib'
 gem 'sinatra-reloader'
 gem 'multi_json'
 gem 'debugger'
+gem 'haml'
 
 group :test do
   gem "rack-test", "~> 0.6.1"
