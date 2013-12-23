@@ -21,7 +21,7 @@ cultural and geographical (ie: Elf, Dwarf or Orc).
 ### API usage
 Here are the url's supported by the API:
 
-- :base =>  http://order-of-the-pixel.herokuapp.com/api/
+- :base =>  http://order-of-the-pixel.herokuapp.com/
 
 - :readme =>  http://order-of-the-pixel.herokuapp.com/readme  
 
