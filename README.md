@@ -25,19 +25,19 @@ Here are the url's supported by the API:
 
 - :readme =>  http://order-of-the-pixel.herokuapp.com/readme  
 
-- :heroes => http://order-of-the-pixel.herokuapp.com/api/heroes/
+- :heroes => http://order-of-the-pixel.herokuapp.com/api/heroes
 
   Supported Actions: GET, PUT, POST, DELETE
 
-- :weapons =>  http://order-of-the-pixel.herokuapp.com/api/weapons/
-
-  Supported Actions: GET, PUT, POST, DELETE
-  
-- :races =>  http://order-of-the-pixel.herokuapp.com/api/races/
+- :weapons =>  http://order-of-the-pixel.herokuapp.com/api/weapons
 
   Supported Actions: GET, PUT, POST, DELETE
   
-- :jobs =>  http://order-of-the-pixel.herokuapp.com/api/jobs/
+- :races =>  http://order-of-the-pixel.herokuapp.com/api/races
+
+  Supported Actions: GET, PUT, POST, DELETE
+  
+- :jobs =>  http://order-of-the-pixel.herokuapp.com/api/jobs
 
   Supported Actions: GET, PUT, POST, DELETE
 
