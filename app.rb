@@ -73,7 +73,7 @@ get '/readme' do
   redirect "https://github.com/TrueniTo/order-of-the-pixel/"
 end
 
-namespace '/api' do
+namespace '/api/v1' do
 
   # index
   get '/heroes' do
