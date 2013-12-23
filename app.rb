@@ -70,7 +70,7 @@ get '/' do
 end
 
 get '/readme' do
-  redirect "https://github.com/TrueniTo/order-of-the-pixel/"
+  redirect "https://github.com/PixelPerfectTree/order-of-the-pixel"
 end
 
 namespace '/api/v1' do
