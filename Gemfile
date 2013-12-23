@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 gem 'json'
 gem 'data_mapper'
 gem 'dm-sqlite-adapter'
+gem 'dm-postgres-adapter'
 gem 'puma'
 gem 'sinatra', require: "sinatra/base"
 gem 'sinatra-contrib'

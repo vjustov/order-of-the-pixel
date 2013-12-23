@@ -16,10 +16,14 @@ configure :development, :test, :production do
   set :protection, origin_whitelist: ["chrome-extension://fdmmgilgnpjigdojojpjoooidkmcomcm", "http://127.0.0.1"]
   set :protect_from_csrf, true
   set :server, :puma
-  set :datamapper_url, "sqlite3://#{File.dirname(__FILE__)}/test.sqlite3"
+  # Local sqlite for development.
+  # set :datamapper_url, "sqlite3://#{File.dirname(__FILE__)}/test.sqlite3"
 end
 
-DataMapper.setup(:default, "sqlite::memory:")
+# To use on SQlite on Heroku (Production):
+DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/mydatabase.db")
+# To use on SQlite Locally (Developmente):
+# DataMapper.setup(:default, "sqlite::memory:")
 
 class Hero
   include DataMapper::Resource
