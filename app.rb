@@ -21,7 +21,7 @@ configure :development, :test, :production do
 end
 
 # To use on SQlite on Heroku (Production):
-DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/mydatabase.db")
+DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres://localhost/mydb')
 # To use on SQlite Locally (Developmente):
 # DataMapper.setup(:default, "sqlite::memory:")
 

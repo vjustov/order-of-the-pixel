@@ -10,9 +10,7 @@ gem 'sinatra-reloader'
 gem 'multi_json'
 gem 'debugger'
 gem 'haml'
-
-group :test, :development do
-  gem "rack-test", "~> 0.6.1"
-  gem 'minitest', "~> 5.0"
-  gem 'dm-sqlite-adapter'
-end
+gem 'dm-postgres-adapter', :group => :production
+# gem 'dm-sqlite-adapter', :group => :development
+gem "rack-test", "~> 0.6.1", :group => :development
+gem 'minitest', "~> 5.0", :group => :development
