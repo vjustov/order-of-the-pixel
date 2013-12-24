@@ -13,18 +13,21 @@ require 'haml'
 configure :development, :test, :production do
   register ::Sinatra::Namespace
   set :protection, true
+  # Allows local requests such as Postman (Chrome extension):
   set :protection, origin_whitelist: ["chrome-extension://fdmmgilgnpjigdojojpjoooidkmcomcm", "http://127.0.0.1"]
   set :protect_from_csrf, true
   set :server, :puma
-  # Local sqlite for development.
+  # Local Sqlite (Development):
   # set :datamapper_url, "sqlite3://#{File.dirname(__FILE__)}/test.sqlite3"
 end
 
-# To use on SQlite on Heroku (Production):
+# Live Postgres for Heroku (Production):
 DataMapper.setup(:default, ENV['HEROKU_POSTGRESQL_AMBER_URL'] || 'postgres://localhost/mydb')
-# To use on SQlite Locally (Developmente):
+# Local SQlite Locally (Development):
 # DataMapper.setup(:default, "sqlite::memory:")
 
+
+# Main classes for the order of the pixel API.
 class Hero
   include DataMapper::Resource
   belongs_to :weapon
@@ -73,15 +76,16 @@ get '/readme' do
   redirect "https://github.com/PixelPerfectTree/order-of-the-pixel"
 end
 
+# Namespacing the API for version one.
 namespace '/api/v1' do
 
-  # index
+  # Index
   get '/heroes' do
     heroes = Hero.all
     heroes.to_json
   end
 
-  # show
+  # Show
   get '/heroes/:id' do
     hero = Hero.get(params[:id])
     if hero.nil?
@@ -90,7 +94,7 @@ namespace '/api/v1' do
     hero.to_json
   end
 
-  #create
+  # Create
   post '/heroes' do
     json = request.body.read.to_json
     data = JSON.parse(json, :quirks_mode => true)
@@ -117,7 +121,7 @@ namespace '/api/v1' do
     hero.to_json
   end
 
-  #delete
+  # Delete
   delete '/heroes/:id' do
     hero ||= Hero.get(params[:id]) || halt(404)
     halt 404 if hero.nil?
@@ -130,14 +134,14 @@ namespace '/api/v1' do
   end
 
   # Weapon routes
-  # show
 
-  # index
+  # Index
   get '/weapons' do
     weapons = Weapon.all
     weapons.to_json
   end
 
+  # Show
   get '/weapons/:id' do
     weapon = Weapon.get(params[:id])
     if weapon.nil?
@@ -146,7 +150,7 @@ namespace '/api/v1' do
     weapon.to_json
   end
 
-  #create
+  # Create
   post '/weapons' do
     json = request.body.read.to_json
     data = JSON.parse(json, :quirks_mode => true)
@@ -161,7 +165,7 @@ namespace '/api/v1' do
     [201, {'Location' => "/weapon/#{weapon.id}"}, weapon.to_json]
   end
 
-  #update
+  # Update
   put '/weapons/:id' do
     json = request.body.read.to_json
     data = JSON.parse(json, :quirks_mode => true)
@@ -185,8 +189,8 @@ namespace '/api/v1' do
     end
   end
 
-  # Race routes
-  # index
+  # RACE routes
+  # Index
   get '/races' do
     races = Race.all
     races.to_json
@@ -201,7 +205,7 @@ namespace '/api/v1' do
     race.to_json
   end
 
-  #create
+  #Create
   post '/races' do
     json = request.body.read.to_json
     data = JSON.parse(json, :quirks_mode => true)
@@ -216,7 +220,7 @@ namespace '/api/v1' do
     [201, {'Location' => "/race/#{race.id}"}, race.to_json]
   end
 
-  #update
+  #Update
   put '/races/:id' do
     json = request.body.read.to_json
     data = JSON.parse(json, :quirks_mode => true)
@@ -227,7 +231,7 @@ namespace '/api/v1' do
     race.to_json
   end
 
-  #delete
+  # Delete
   delete '/races/:id' do
     race ||= Race.get(params[:id]) || halt(404)
     halt 404 if race.nil?
@@ -241,14 +245,14 @@ namespace '/api/v1' do
   end
 
   # JOB routes
-  # show
 
-  # index
+  # Index
   get '/jobs' do
     jobs = Job.all
     jobs.to_json
   end
 
+  #S how
   get '/jobs/:id' do
     job = Job.get(params[:id])
     if job.nil?
@@ -257,7 +261,7 @@ namespace '/api/v1' do
     job.to_json
   end
 
-  #create
+  # Create
   post '/jobs' do
     json = request.body.read.to_json
     data = JSON.parse(json, :quirks_mode => true)
@@ -272,7 +276,7 @@ namespace '/api/v1' do
     [201, {'Location' => "/job/#{job.id}"}, job.to_json]
   end
 
-
+  # Show
   put '/jobs/:id' do
     json = request.body.read.to_json
     data = JSON.parse(json, :quirks_mode => true)
@@ -283,7 +287,7 @@ namespace '/api/v1' do
     job.to_json
   end
 
-  #delete
+  # Delete
   delete '/jobs/:id' do
     job ||= Job.get(params[:id]) || halt(404)
 

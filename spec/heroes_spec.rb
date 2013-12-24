@@ -4,6 +4,8 @@ require 'rack/test'
 require 'minitest/autorun'
 require_relative '../app.rb'
 require_relative 'helpers.rb'
+
+# Custom methods to simulate Rspec’s “expect {}.to change {}.by(x)”.
 include Rack::Test::Methods
 
 def app
