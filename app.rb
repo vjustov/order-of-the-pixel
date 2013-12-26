@@ -4,7 +4,6 @@ require 'sinatra'
 require 'json'
 require 'data_mapper'
 require 'puma'
-require 'sinatra'
 require "sinatra/namespace"
 require "sinatra/base"
 require 'debugger'
