@@ -301,5 +301,7 @@ namespace '/api/v1' do
   before do
     content_type 'application/json'
     headers["X-CSRF-Token"] = session[:csrf] ||= SecureRandom.hex(32)
+    # To allow Cross Domain XHR
+    headers["Access-Control-Allow-Origin"] ||= request.env["HTTP_ORIGIN"] 
   end
 end
