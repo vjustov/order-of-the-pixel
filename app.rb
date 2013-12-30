@@ -10,6 +10,11 @@ require "sinatra/base"
 require 'debugger'
 require 'haml'
 
+['hero','job', 'race','weapon'].each do |file|
+  require File.join(File.dirname(__FILE__), 'lib', "#{file}.rb")
+end
+
+
 
 configure :development, :test, :production do
   register ::Sinatra::Namespace
@@ -27,38 +32,6 @@ end
 # Local SQlite Locally (Development):
  DataMapper.setup(:default, "sqlite::memory:")
 
-
-# Main classes for the order of the pixel API.
-class Hero
-  include DataMapper::Resource
-  belongs_to :weapon
-  belongs_to :job
-  belongs_to :race
-  property :id, Serial
-  property :name, String, required: true
-end
-
-class Weapon
-  include DataMapper::Resource
-  has n, :heroes
-  property :id, Serial
-  property :name, String, required: true
-  property :desc, Text, required: true, length: 255
-end
-
-class Race
-  include DataMapper::Resource
-  has n, :heroes
-  property :id, Serial
-  property :name, String, required: true
-end
-
-class Job
-  include DataMapper::Resource
-  has n, :heroes
-  property :id, Serial
-  property :name, String, required: true
-end
 
 DataMapper.finalize
 DataMapper.auto_migrate!

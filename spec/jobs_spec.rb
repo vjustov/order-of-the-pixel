@@ -25,7 +25,6 @@ describe "See a job" do
 
   it "responds with OK to job show call" do
     get "/api/v1/jobs/1"
-    debugger
     last_response.status.must_equal 200
   end
 end

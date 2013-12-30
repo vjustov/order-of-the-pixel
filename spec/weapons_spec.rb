@@ -6,6 +6,7 @@ require_relative '../app.rb'
 require_relative 'helpers.rb'
 include Rack::Test::Methods
 
+
 def app
   Sinatra::Application
 end
@@ -19,9 +20,11 @@ end
 
 describe "See a weapon" do
   before do
-    data = {name: "Bastard Sword",
-     desc: "Worn by the bravest, adds +1 agility"}
-    post "/api/v1/weapons", data
+    weapon = Weapon.new
+    weapon.name = 'Bastard Sword'
+    weapon.desc = 'Worn by the bravest, adds +1 agility'
+    #data = {name: "", desc: "Worn by the bravest, adds +1 agility"}
+    post "/api/v1/weapons", weapon.to_json    
   end
 
   it "responds with OK to weapon show call" do
@@ -33,12 +36,13 @@ end
 
 describe "Create a weapon" do
   before do
-    @data = {name: "Bastard Sword",
-     desc: "Worn by the bravest, adds +1 agility"}
+    weapon = Weapon.new
+    weapon.name = 'Bastard Sword'
+    weapon.desc = 'Worn by the bravest, adds +1 agility'
   end
 
   it "must increase the weapon count by one" do
-    lambda { post "/api/v1/weapons", @data }.must_change Weapon.all, :count, +1
+    lambda { post "/api/v1/weapons", @weapon.to_json }.must_change Weapon.all, :count, +1
   end
 
   it "check if the weapon has been created accordingly" do
