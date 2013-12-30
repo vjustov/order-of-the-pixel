@@ -14,7 +14,7 @@ end
 
 describe "See all heroes" do
   it "responds with OK to hero index call" do
-    get "/api/heroes"
+    get "/api/v1/heroes"
     last_response.status.must_equal 200
   end
 end
@@ -25,11 +25,11 @@ describe "See a hero" do
       weapon_id: 1,
       job_id: 1,
       race_id: 1}
-    post "/api/heroes", data
+    post "/api/v1/heroes", data
   end
 
   it "responds with OK to hero show call" do
-    get "/api/heroes/2"
+    get "/api/v1/heroes/2"
     last_response.status.must_equal 200
   end
 end
@@ -43,11 +43,11 @@ describe "Create a hero" do
   end
 
   it "must increase the hero count by one" do
-    lambda { post "/api/heroes", @data }.must_change Hero.all, :count, +1
+    lambda { post "/api/v1/heroes", @data }.must_change Hero.all, :count, +1
   end
 
   it "check if the hero has been created accordingly" do
-    post_data = post "/api/heroes", @data
+    post_data = post "/api/v1/heroes", @data
     resp = JSON.parse(post_data.body)
     resp["name"].must_equal "Mindless Zombie"
     resp["weapon_id"].must_equal 1
@@ -62,7 +62,7 @@ describe "Edit a hero" do
   end
 
   it "check if the hero has been updated accordingly" do
-    put_data = put "/api/heroes/2", @data
+    put_data = put "/api/v1/heroes/2", @data
     resp = JSON.parse(put_data.body)
     resp["name"].must_equal "Zeus"
   end
@@ -74,11 +74,11 @@ describe "Destroy a hero" do
       weapon_id: 1,
       job_id: 1,
       race_id: 1 }
-      post "/api/heroes", @data
+      post "/api/v1/heroes", @data
   end
 
   it "must decrease the hero count by one" do
-    lambda { delete "/api/heroes/1" }.must_change Hero.all, :count, -1
+    lambda { delete "/api/v1/heroes/1" }.must_change Hero.all, :count, -1
     last_response.status.must_equal 200
   end
 end

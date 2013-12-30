@@ -10,6 +10,7 @@ require "sinatra/base"
 require 'debugger'
 require 'haml'
 
+
 configure :development, :test, :production do
   register ::Sinatra::Namespace
   set :protection, true
@@ -22,9 +23,9 @@ configure :development, :test, :production do
 end
 
 # Live Postgres for Heroku (Production):
-DataMapper.setup(:default, ENV['HEROKU_POSTGRESQL_AMBER_URL'] || 'postgres://localhost/mydb')
+#DataMapper.setup(:default, ENV['HEROKU_POSTGRESQL_AMBER_URL'] || 'postgres://localhost/mydb')
 # Local SQlite Locally (Development):
-# DataMapper.setup(:default, "sqlite::memory:")
+ DataMapper.setup(:default, "sqlite::memory:")
 
 
 # Main classes for the order of the pixel API.

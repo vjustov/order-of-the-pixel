@@ -12,7 +12,7 @@ end
 
 describe "See all jobs" do
   it "responds with OK to jobs index call" do
-    get "/api/jobs"
+    get "/api/v1/jobs"
     last_response.status.must_equal 200
   end
 end
@@ -20,11 +20,12 @@ end
 describe "See a job" do
   before do
     data = {name: "Rogue"}
-    post "/api/jobs", data
+    post "/api/v1/jobs", data
   end
 
   it "responds with OK to job show call" do
-    get "/api/jobs/1"
+    get "/api/v1/jobs/1"
+    debugger
     last_response.status.must_equal 200
   end
 end
@@ -35,11 +36,11 @@ describe "Create a job" do
   end
 
   it "must increase the job count by one" do
-    lambda { post "/api/jobs", @data }.must_change Job.all, :count, +1
+    lambda { post "/api/v1/jobs", @data }.must_change Job.all, :count, +1
   end
 
   it "check if the job has been created accordingly" do
-    post_data = post "/api/jobs", @data
+    post_data = post "/api/v1/jobs", @data
     resp = JSON.parse(post_data.body)
     resp["name"].must_equal "Rogue"
   end
@@ -51,7 +52,7 @@ describe "Edit a job" do
   end
 
   it "check if the job has been updated accordingly" do
-    put_data = put "/api/jobs/2", @data
+    put_data = put "/api/v1/jobs/2", @data
     resp = JSON.parse(put_data.body)
     resp["name"].must_equal "Rogue"
   end
@@ -60,11 +61,11 @@ end
 describe "Destroy a job" do
   before do
     @data = { name: "Rogue"}
-    post "/api/jobs", @data
+    post "/api/v1/jobs", @data
   end
 
   it "must decrease the job count by one" do
-    lambda { delete "/api/jobs/2" }.must_change Job.all, :count, -1
+    lambda { delete "/api/v1/jobs/2" }.must_change Job.all, :count, -1
     last_response.status.must_equal 200
   end
 end
