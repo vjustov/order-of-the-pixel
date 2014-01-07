@@ -5,5 +5,4 @@ class Weapon
   property :name, String, required: true
   property :desc, Text, required: true, length: 255
 
-  
 end

@@ -1,3 +1,4 @@
+ENV['RACK_ENV'] = 'test'
 # encoding: UTF-8
 require 'rubygems'
 require 'sinatra'
@@ -30,8 +31,9 @@ end
 # Live Postgres for Heroku (Production):
 #DataMapper.setup(:default, ENV['HEROKU_POSTGRESQL_AMBER_URL'] || 'postgres://localhost/mydb')
 # Local SQlite Locally (Development):
- DataMapper.setup(:default, "sqlite::memory:")
-
+ #DataMapper.setup(:default, "sqlite::memory:")
+ DataMapper.setup(:default, "sqlite://#{File.expand_path(File.dirname(__FILE__))}/db.sqlite")
+#DataMapper.repository(:default).adapter.resource_naming_convention =  DataMapper::NamingConventions::Resource::Underscored
 
 DataMapper.finalize
 DataMapper.auto_migrate!
@@ -126,26 +128,31 @@ namespace '/api/v1' do
 
   # Create
   post '/weapons' do
-    json = request.body.read.to_json
+    json = request.body.read
     data = JSON.parse(json, :quirks_mode => true)
 
     if data.nil? || data['name'].nil?
       halt 400
     end
-
-    weapon = Weapon.new(name: params[:name], desc: params[:desc])
-
+    
+    weapon = Weapon.new(name: data['name'],desc:  data['desc'])
     halt 500 unless weapon.save
     [201, {'Location' => "/weapon/#{weapon.id}"}, weapon.to_json]
   end
 
   # Update
   put '/weapons/:id' do
-    json = request.body.read.to_json
+    json = request.body.read
     data = JSON.parse(json, :quirks_mode => true)
     weapon ||= Weapon.get(params[:id]) || halt(404)
+
+    if data.nil? || data['name'].nil? || data['desc'].nil?
+      halt 400
+    end
+
     halt 500 unless weapon.update(
-      name:    params[:name],
+      name: data['name'],
+      desc: data['desc']
     )
     weapon.to_json
   end
@@ -181,14 +188,14 @@ namespace '/api/v1' do
 
   #Create
   post '/races' do
-    json = request.body.read.to_json
+    json = request.body.read
     data = JSON.parse(json, :quirks_mode => true)
 
     if data.nil? || data['name'].nil?
       halt 400
     end
 
-    race = Race.new(name: params[:name])
+    race = Race.new(name: data['name'])
 
     halt 500 unless race.save
     [201, {'Location' => "/race/#{race.id}"}, race.to_json]
@@ -196,11 +203,11 @@ namespace '/api/v1' do
 
   #Update
   put '/races/:id' do
-    json = request.body.read.to_json
+    json = request.body.read
     data = JSON.parse(json, :quirks_mode => true)
     race ||= Race.get(params[:id]) || halt(404)
     halt 500 unless race.update(
-      name:    params[:name],
+      name:    data['name'],
     )
     race.to_json
   end
@@ -237,14 +244,14 @@ namespace '/api/v1' do
 
   # Create
   post '/jobs' do
-    json = request.body.read.to_json
+    json = request.body.read
     data = JSON.parse(json, :quirks_mode => true)
 
     if data.nil? || data['name'].nil?
       halt 400
     end
 
-    job = Job.new(name: params[:name])
+    job = Job.new(name: data['name'])
 
     halt 500 unless job.save
     [201, {'Location' => "/job/#{job.id}"}, job.to_json]
@@ -252,11 +259,11 @@ namespace '/api/v1' do
 
   # Show
   put '/jobs/:id' do
-    json = request.body.read.to_json
+    json = request.body.read
     data = JSON.parse(json, :quirks_mode => true)
     job ||= Job.get(params[:id]) || halt(404)
     halt 500 unless job.update(
-      name:    params[:name],
+      name:    data['name'],
     )
     job.to_json
   end
@@ -276,5 +283,9 @@ namespace '/api/v1' do
   before do
     content_type 'application/json'
     headers["X-CSRF-Token"] = session[:csrf] ||= SecureRandom.hex(32)
+     # To allow Cross Domain XHR
+    headers["Access-Control-Allow-Origin"] ||= request.env["HTTP_ORIGIN"] 
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    headers['Access-Control-Allow-Headers'] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(',')
   end
 end
