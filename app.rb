@@ -17,9 +17,9 @@ require 'haml'
 end
 
 #requiring helpers
-require_relative 'json_helper.rb'
+require_relative 'helpers/json_helper.rb'
 
-
+#setting helper
 helpers JsonHelpers
 
 configure :development, :test, :production do
@@ -38,7 +38,6 @@ end
 # Local SQlite Locally (Development):
  #DataMapper.setup(:default, "sqlite::memory:")
  DataMapper.setup(:default, "sqlite://#{File.expand_path(File.dirname(__FILE__))}/db.sqlite")
-#DataMapper.repository(:default).adapter.resource_naming_convention =  DataMapper::NamingConventions::Resource::Underscored
 
 DataMapper.finalize
 DataMapper.auto_migrate!
@@ -77,7 +76,7 @@ namespace '/api/v1' do
 
   # Create
   post '/heroes' do
-    data = parsed_params
+    data = parsed_body
 
     if data.nil? || data['name'].nil?
       halt 400
@@ -92,7 +91,7 @@ namespace '/api/v1' do
 
   #update
   put '/heroes/:id' do
-    data = parsed_params
+    data = parsed_body
     hero ||= Hero.get(params[:id]) || halt(404)
     halt 500 unless hero.update(
       name: data['name'],
@@ -126,7 +125,7 @@ namespace '/api/v1' do
 
   # Show
   get '/weapons/:id' do
-    weapon = Weapon.get(parsed_params[:id])
+    weapon = Weapon.get(parsed_body[:id])
     if weapon.nil?
       halt 404
     end
@@ -135,7 +134,7 @@ namespace '/api/v1' do
 
   # Create
   post '/weapons' do
-    data = parsed_params
+    data = parsed_body
     
     if data.nil? || data['name'].nil?
       halt 400
@@ -148,7 +147,7 @@ namespace '/api/v1' do
 
   # Update
   put '/weapons/:id' do
-    data = parsed_params
+    data = parsed_body
     weapon ||= Weapon.get(params['id']) || halt(404)
 
     if data.nil? || data['name'].nil? || data['desc'].nil?
@@ -193,7 +192,7 @@ namespace '/api/v1' do
 
   #Create
   post '/races' do
-    data = parsed_params
+    data = parsed_body
 
     if data.nil? || data['name'].nil?
       halt 400
@@ -207,7 +206,7 @@ namespace '/api/v1' do
 
   #Update
   put '/races/:id' do
-    data = parsed_params
+    data = parsed_body
     race ||= Race.get(params[:id]) || halt(404)
     halt 500 unless race.update(
       name:    data['name'],
@@ -248,7 +247,7 @@ namespace '/api/v1' do
   # Create
   post '/jobs' do
     
-    data = parsed_params
+    data = parsed_body
 
     if data.nil? || data['name'].nil?
       halt 400
@@ -262,7 +261,7 @@ namespace '/api/v1' do
 
   # Show
   put '/jobs/:id' do
-    data = parsed_params
+    data = parsed_body
     job ||= Job.get(params[:id]) || halt(404)
     halt 500 unless job.update(
       name:    data['name'],
@@ -283,11 +282,19 @@ namespace '/api/v1' do
   end
 
   before do
-    content_type 'application/json'
+    content_type :json
+
     headers["X-CSRF-Token"] = session[:csrf] ||= SecureRandom.hex(32)
      # To allow Cross Domain XHR
     headers["Access-Control-Allow-Origin"] ||= request.env["HTTP_ORIGIN"] 
-    #headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-    #headers['Access-Control-Allow-Headers'] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(',')
+    headers['Access-Control-Allow-Headers'] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(',')
+
+    #Enable preflight request to allow http request for PUT and DELETE methods
+    if request.request_method == 'OPTIONS'
+      response.headers["Access-Control-Allow-Methods"] = "POST, PUT, DELETE"
+      halt 200
+    end
+
+   
   end
 end
