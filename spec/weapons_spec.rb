@@ -23,8 +23,8 @@ describe "See a weapon" do
     #weapon = Weapon.new 'Bastard Sword', 'Worn by the bravest, adds +1 agility'
     #weapon.name = 
     #weapon.desc = 
-    data = {name: "Bastard Sword", desc: "Worn by the bravest, adds +1 agility"}
-    post "/api/v1/weapons", data
+    weapon = Weapon.new(name: "Bastard Sword", desc: "Worn by the bravest, adds +1 agility")
+    post "/api/v1/weapons", weapon.to_json
         
   end
 
@@ -37,16 +37,15 @@ end
 
 describe "Create a weapon" do
   before do
-   @data = {name: "Bastard Sword",
-            desc: "Worn by the bravest, adds +1 agility"}
+   @weapon = Weapon.new(name: "Bastard Sword", desc: "Worn by the bravest, adds +1 agility")
   end
 
   it "must increase the weapon count by one" do
-    lambda { post "/api/v1/weapons", @data }.must_change Weapon.all, :count, +1
+    lambda { post "/api/v1/weapons", @weapon.to_json }.must_change Weapon.all, :count, +1
   end
 
   it "check if the weapon has been created accordingly" do
-    post_data = post "/api/v1/weapons", @data
+    post_data = post "/api/v1/weapons", @weapon.to_json
     resp = JSON.parse(post_data.body)
     resp["name"].must_equal "Bastard Sword"
     resp["desc"].must_equal "Worn by the bravest, adds +1 agility"
@@ -55,12 +54,11 @@ end
 
 describe "Edit a weapon" do
   before do
-    @data = {name: "Bastard Sword",
-     desc: "Worn by the bravest, adds +1 agility"}
+    @weapon = Weapon.new(name: "Bastard Sword", desc: "Worn by the bravest, adds +1 agility")
   end
 
   it "check if the weapon has been updated accordingly" do
-    put_data = put "/api/v1/weapons/2", @data
+    put_data = put "/api/v1/weapons/2", @weapon.to_json
     resp = JSON.parse(put_data.body)
     resp["name"].must_equal "Bastard Sword"
     resp["desc"].must_equal "Worn by the bravest, adds +1 agility"
@@ -69,9 +67,8 @@ end
 
 describe "Destroy a weapon" do
   before do
-    @data = {name: "Bastard Sword",
-     desc: "Worn by the bravest, adds +1 agility"}
-    post "/api/v1/weapons", @data
+   @weapon = Weapon.new(name: "Bastard Sword", desc: "Worn by the bravest, adds +1 agility")
+    post "/api/v1/weapons", @weapon.to_json
   end
 
   it "must decrease the weapon count by one" do

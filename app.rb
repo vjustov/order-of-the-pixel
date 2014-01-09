@@ -11,11 +11,16 @@ require "sinatra/base"
 require 'debugger'
 require 'haml'
 
+#requiring model classes
 ['hero','job', 'race','weapon'].each do |file|
   require File.join(File.dirname(__FILE__), 'lib', "#{file}.rb")
 end
 
+#requiring helpers
+require_relative 'json_helper.rb'
 
+
+helpers JsonHelpers
 
 configure :development, :test, :production do
   register ::Sinatra::Namespace
@@ -72,14 +77,13 @@ namespace '/api/v1' do
 
   # Create
   post '/heroes' do
-    json = request.body.read.to_json
-    data = JSON.parse(json, :quirks_mode => true)
+    data = parsed_params
 
     if data.nil? || data['name'].nil?
       halt 400
     end
 
-    hero = Hero.new(name: params[:name], weapon_id: params[:weapon_id], job_id: params[:job_id], race_id: params[:race_id])
+    hero = Hero.new(name: data['name'], weapon_id: data['weapon_id'], job_id: data['job_id'], race_id: data['race_id'])
 
     halt 500 unless hero.save
     status 201
@@ -88,11 +92,14 @@ namespace '/api/v1' do
 
   #update
   put '/heroes/:id' do
-    json = request.body.read.to_json
-    data = JSON.parse(json, :quirks_mode => true)
+    data = parsed_params
     hero ||= Hero.get(params[:id]) || halt(404)
     halt 500 unless hero.update(
-      name:    params[:name],
+      name: data['name'],
+      desc: data['desc'],
+      weapon_id: data['weapon_id'],
+      job_id: data['job_id'], 
+      race_id: data['race_id']
     )
     hero.to_json
   end
@@ -119,7 +126,7 @@ namespace '/api/v1' do
 
   # Show
   get '/weapons/:id' do
-    weapon = Weapon.get(params[:id])
+    weapon = Weapon.get(parsed_params[:id])
     if weapon.nil?
       halt 404
     end
@@ -128,9 +135,8 @@ namespace '/api/v1' do
 
   # Create
   post '/weapons' do
-    json = request.body.read
-    data = JSON.parse(json, :quirks_mode => true)
-
+    data = parsed_params
+    
     if data.nil? || data['name'].nil?
       halt 400
     end
@@ -142,9 +148,8 @@ namespace '/api/v1' do
 
   # Update
   put '/weapons/:id' do
-    json = request.body.read
-    data = JSON.parse(json, :quirks_mode => true)
-    weapon ||= Weapon.get(params[:id]) || halt(404)
+    data = parsed_params
+    weapon ||= Weapon.get(params['id']) || halt(404)
 
     if data.nil? || data['name'].nil? || data['desc'].nil?
       halt 400
@@ -188,8 +193,7 @@ namespace '/api/v1' do
 
   #Create
   post '/races' do
-    json = request.body.read
-    data = JSON.parse(json, :quirks_mode => true)
+    data = parsed_params
 
     if data.nil? || data['name'].nil?
       halt 400
@@ -203,8 +207,7 @@ namespace '/api/v1' do
 
   #Update
   put '/races/:id' do
-    json = request.body.read
-    data = JSON.parse(json, :quirks_mode => true)
+    data = parsed_params
     race ||= Race.get(params[:id]) || halt(404)
     halt 500 unless race.update(
       name:    data['name'],
@@ -244,8 +247,8 @@ namespace '/api/v1' do
 
   # Create
   post '/jobs' do
-    json = request.body.read
-    data = JSON.parse(json, :quirks_mode => true)
+    
+    data = parsed_params
 
     if data.nil? || data['name'].nil?
       halt 400
@@ -259,8 +262,7 @@ namespace '/api/v1' do
 
   # Show
   put '/jobs/:id' do
-    json = request.body.read
-    data = JSON.parse(json, :quirks_mode => true)
+    data = parsed_params
     job ||= Job.get(params[:id]) || halt(404)
     halt 500 unless job.update(
       name:    data['name'],
@@ -285,7 +287,7 @@ namespace '/api/v1' do
     headers["X-CSRF-Token"] = session[:csrf] ||= SecureRandom.hex(32)
      # To allow Cross Domain XHR
     headers["Access-Control-Allow-Origin"] ||= request.env["HTTP_ORIGIN"] 
-    headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-    headers['Access-Control-Allow-Headers'] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(',')
+    #headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    #headers['Access-Control-Allow-Headers'] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(',')
   end
 end
