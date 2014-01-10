@@ -1,3 +1,4 @@
+#ENV['RACK_ENV'] = 'test'
 # encoding: UTF-8
 require 'rubygems'
 require 'sinatra'
@@ -54,6 +55,9 @@ Race.create(name: 'Human')
 Weapon.create(name: 'Mithril Hammer', desc: "The almighty Thor Hammer, gives +10 to all stats")
 Hero.create(name: 'Thor', weapon_id: 1, job_id: 1, race_id: 1)
 
+
+
+
 get '/' do
   haml :index
 end
@@ -64,6 +68,22 @@ end
 
 # Namespacing the API for version one.
 namespace '/api/v1' do
+
+before do
+  content_type :json
+
+  headers["X-CSRF-Token"] = session[:csrf] ||= SecureRandom.hex(32)
+   # To allow Cross Domain XHR
+  headers["Access-Control-Allow-Origin"] ||= request.env["HTTP_ORIGIN"] 
+  headers['Access-Control-Allow-Headers'] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(',')
+
+  #Enable preflight request to allow http request for PUT and DELETE methods
+  if request.request_method == 'OPTIONS'
+    response.headers["Access-Control-Allow-Methods"] = "POST, PUT, DELETE"
+    halt 200
+  end
+ 
+end
 
   # Index
   get '/heroes' do
@@ -101,7 +121,6 @@ namespace '/api/v1' do
     hero ||= Hero.get(params[:id]) || halt(404)
     halt 500 unless hero.update(
       name: data['name'],
-      desc: data['desc'],
       weapon_id: data['weapon_id'],
       job_id: data['job_id'], 
       race_id: data['race_id']
@@ -287,19 +306,6 @@ namespace '/api/v1' do
     end
   end
 
-  before do
-    content_type :json
 
-    headers["X-CSRF-Token"] = session[:csrf] ||= SecureRandom.hex(32)
-     # To allow Cross Domain XHR
-    headers["Access-Control-Allow-Origin"] ||= request.env["HTTP_ORIGIN"] 
-    headers['Access-Control-Allow-Headers'] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(',')
-
-    #Enable preflight request to allow http request for PUT and DELETE methods
-    if request.request_method == 'OPTIONS'
-      response.headers["Access-Control-Allow-Methods"] = "POST, PUT, DELETE"
-      halt 200
-    end
-   
-  end
+  
 end
