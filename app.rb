@@ -304,5 +304,6 @@ end
       body "The job with an id of #{job.id} doesn't exist or is related to a hero and can't be deleted."
     end
   end
-  
+    
 end
+
