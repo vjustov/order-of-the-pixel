@@ -1,4 +1,3 @@
-ENV['RACK_ENV'] = 'test'
 # encoding: UTF-8
 require 'rubygems'
 require 'sinatra'
@@ -8,7 +7,10 @@ require 'puma'
 require 'sinatra'
 require "sinatra/namespace"
 require "sinatra/base"
-require 'debugger'
+if development? || test?
+  require "sinatra/reloader" 
+  require 'debugger' 
+end
 require 'haml'
 
 #requiring model classes
@@ -22,22 +24,26 @@ require_relative 'helpers/json_helper.rb'
 #setting helper
 helpers JsonHelpers
 
-configure :development, :test, :production do
+configure :development, :test do
   register ::Sinatra::Namespace
   set :protection, true
   # Allows local requests such as Postman (Chrome extension):
   set :protection, origin_whitelist: ["chrome-extension://fdmmgilgnpjigdojojpjoooidkmcomcm", "http://127.0.0.1"]
   set :protect_from_csrf, true
   set :server, :puma
-  # Local Sqlite (Development):
-  # set :datamapper_url, "sqlite3://#{File.dirname(__FILE__)}/test.sqlite3"
+  # Local SQlite Locally (Development):
+  DataMapper.setup(:default, "sqlite://#{File.expand_path(File.dirname(__FILE__))}/db/db.sqlite3")
 end
 
+configure :production do 
+  register ::Sinatra::Namespace
+  set :protection, true
+  set :protect_from_csrf, true
+  set :server, :puma
 # Live Postgres for Heroku (Production):
-#DataMapper.setup(:default, ENV['HEROKU_POSTGRESQL_AMBER_URL'] || 'postgres://localhost/mydb')
-# Local SQlite Locally (Development):
- #DataMapper.setup(:default, "sqlite::memory:")
- DataMapper.setup(:default, "sqlite://#{File.expand_path(File.dirname(__FILE__))}/db.sqlite")
+  DataMapper.setup(:default, ENV['HEROKU_POSTGRESQL_AMBER_URL'] || 'postgres://localhost/mydb')
+end
+
 
 DataMapper.finalize
 DataMapper.auto_migrate!
@@ -294,7 +300,6 @@ namespace '/api/v1' do
       response.headers["Access-Control-Allow-Methods"] = "POST, PUT, DELETE"
       halt 200
     end
-
    
   end
 end
