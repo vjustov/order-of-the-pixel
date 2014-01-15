@@ -51,11 +51,11 @@ DataMapper.auto_migrate!
 # Example data.
 Job.create(name: 'Paladin')
 Race.create(name: 'Human')
+Race.create(name: 'Floran')
+Race.create(name: 'Avian')
+Race.create(name: 'Glitch')
 Weapon.create(name: 'Mithril Hammer', desc: "The almighty Thor Hammer, gives +10 to all stats")
 Hero.create(name: 'Thor', weapon_id: 1, job_id: 1, race_id: 1)
-
-
-
 
 get '/' do
   haml :index
@@ -73,8 +73,11 @@ before do
 
   headers["X-CSRF-Token"] = session[:csrf] ||= SecureRandom.hex(32)
    # To allow Cross Domain XHR
-  headers["Access-Control-Allow-Origin"] ||= request.env["HTTP_ORIGIN"] 
-  headers['Access-Control-Allow-Headers'] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(',')
+  
+  if request.env["HTTP_ORIGIN"]
+    headers["Access-Control-Allow-Origin"] ||= request.env["HTTP_ORIGIN"] 
+  end
+    headers['Access-Control-Allow-Headers'] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(',')
 
   #Enable preflight request to allow http request for PUT and DELETE methods
   if request.request_method == 'OPTIONS'
